@@ -1,0 +1,24 @@
+header {
+    margin-left: 16rem;
+}
+header nav.navbar {
+    height: 110px;
+}
+
+header nav.navbar .navbar-text {
+    height: 80%;
+    font-weight: 300;
+    font-size: 4.2rem;
+}
+
+#navdrawer .navdrawer-header {
+    height: 110px;
+}
+
+@media only screen and (max-width: 768px) {
+    header,
+    main,
+    footer {
+        margin-left: 0
+    }
+}

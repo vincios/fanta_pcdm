@@ -1,0 +1,15 @@
+.index {
+    margin-top: 52px;
+    justify-content: flex-start;
+}
+
+.index .logo {
+    width: 18em;
+    padding: 12px;
+}
+
+.index span {
+    padding: 8px;
+    font-size: 1.3rem;
+    text-align: center;
+}

@@ -1,0 +1,93 @@
+{% load static %}
+{% load fanta_pcdm_tags %}
+
+<div id="leaderboard" class="container">
+    {% for concorrente in leaderboard %}
+        <div class="row">
+            <div class="col s12 m8 offset-m2">
+                <div class="card board-item z-depth-1">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col s1 m1 center-align item-position-number unselectable">
+                                {{ forloop.counter }}
+                            </div>
+                            <div class="col s6 m7">
+                                <div class="item-name">
+                                    <span class="main">{{ concorrente.nome }}</span>
+                                    <span class="sub"></span>
+                                </div>
+                            </div>
+                            <div class="col s5 m4 points">
+                                <span class="new badge unselectable deep-purple lighten-2" data-badge-caption="punti">
+                                    {{ concorrente.punteggio }}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    {% comment %}                    <div class="card-tabs">
+                        <ul class="tabs tabs-fixed-width">
+                            {% for puntata in team.puntate %}
+                                <li class="tab">
+                                    <a class="{% if forloop.last %}active{% endif %}"
+                                       href="#{{ team.squadra.nome|slugify }}-{{ puntata.numero }}">
+                                        Puntata {{ puntata.numero }}
+                                        {% if puntata.is_finale %}
+                                            (Finale)
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>{% endcomment %}
+                    <div class="card-content">
+                        <ul class="collapsible z-depth-0">
+                            {% for cpuntata in concorrente.puntate %}
+                                <li>
+                                    <div class="collapsible-header">
+                                        <i class="circle avatar {{ colors|attr:concorrente.id }} lighten-1 white-text unselectable" data-initials="{{ cpuntata.numero_puntata }}"></i>
+                                        <span class="name">Puntata {{ cpuntata.numero_puntata }}</span>
+                                        {% if cpuntata.is_sospeso %}
+                                            <span class="badge status new amber accent-1 grey-text text-darken-3" data-badge-caption="">
+                                                SOSPESO
+                                            </span>
+                                        {% endif %}
+                                        {% if cpuntata.is_eliminato %}
+                                            <span class="badge status new red accent-1 grey-text text-darken-3" data-badge-caption="">
+                                                ELIMINATO
+                                            </span>
+                                        {% endif %}
+                                        {% if 24 in cpuntata.bonus_malus|values_by_attr:"id" %}
+                                            <span class="badge status new blue-grey darken-1 white-text" data-badge-caption="">
+                                                ASSENTE
+                                            </span>
+                                        {% endif %}
+                                        <span class="badge unselectable punti" data-badge-caption="punti">{{ cpuntata.totale }}</span>
+                                    </div>
+                                    {% if cpuntata.bonus_malus %}
+                                        <div class="collapsible-body bm-list">
+                                            {% for bm in cpuntata.bonus_malus %}
+                                                <div class="bm-list-item unselectable">
+                                                    <span class="bm-item-desc" {% if bm.quantita > 1 %}data-qty="{{ bm.quantita }}{% endif %}">{{ bm.descrizione|title }}</span>
+                                                    <span class="bm-item-points {% if bm.is_malus %}is_malus{% endif %}">{{ bm.totale }}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="collapsible-body bm-list-empty center-align grey-text text-darken-1">
+                                            <span class="unselectable">Nulla da mostrare qui</span>
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    M.AutoInit(document.body);
+</script>

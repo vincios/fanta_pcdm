@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block win_title %} Classifica Squadre - Fanta PCDM {% endblock win_title %}
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="{% static 'fanta_pcdm_site/css/leaderboard.css' %}"  media="screen,projection"/>
+{% endblock %}
+
+{% block page_head_title %} Classifica Squadre {% endblock page_head_title %}
+
+{% block content %}
+    <div hx-get="{% url 'fragment-leaderboard-squadre' %}" hx-trigger="load">
+        <div id="loading-screen" class="htmx-indicator">
+            <div class="center-body">
+                <div class="loader-circle-3"></div>
+                <h5 class="loader-text center-align">Calcolo in corso...</h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        M.AutoInit(document.body);
+    </script>
+{% endblock %}

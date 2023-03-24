@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="{% static 'vendor/css/materialize-1.2.2.css' %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'fanta_pcdm/css/base.css' %}"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'fanta_pcdm/css/leaderboard.css' %}"  media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Apps custom styles -->
+    {% block css %}
+    {% endblock css %}
+
+    <title>{% block win_title %} Fanta Prenditi Cura di Me {% endblock win_title %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'fanta_pcdm/images/logo.jpg' %}"/>
+</head>
+<body>
+
+<header>
+    <nav class="top-nav z-depth-1 valign-wrapper">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s10 m9 offset-s1 offset-m2">
+                        <h1 id="page-title" class="header unselectable">{% block page_head_title %} Fanta PCDM {% endblock page_head_title %}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <a class="top-nav sidenav-trigger full hide-on-large-only" href="#" data-target="nav-mobile">
+            <i class="material-icons">menu</i>
+        </a>
+    </div>
+    <ul id="nav-mobile" class="sidenav sidenav-fixed z-depth-1">
+        <li class="logo z-depth-0">
+            {% block sidenav_logo %}
+                <a href="{% url 'index' %}" id="logo-container" class="brand-logo">
+                    <img id="front-page-logo" class="circle" src="{% static 'fanta_pcdm/images/logo.jpg' %}" alt="logo">
+                </a>
+            {% endblock %}
+        </li>
+        <li><a class="subheader">Classifiche</a></li>
+        <li>
+            <a class="waves-effect" href="{% url 'classifica-concorrenti' %}">
+                <i class="material-icons">person_outline</i>Concorrenti
+            </a>
+        </li>
+        <li>
+            <a class="waves-effect" href="{% url 'classifica-squadre' %}">
+                <i class="material-icons">groups</i>Squadre
+            </a>
+        </li>
+        <li><div class="divider"></div></li>
+    </ul>
+</header>
+
+{#<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>#}
+<main>
+    <div id="main-container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="{% static 'vendor/js/materialize-1.2.2.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/js/jquery-3.6.4.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/js/htmx.min.js' %}"></script>
+{% block scripts %}
+{% endblock scripts %}
+
+<script>
+    M.AutoInit(document.body);
+</script>
+</body>
+</html>

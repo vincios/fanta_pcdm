@@ -1,0 +1,167 @@
+{% load static %}
+{% load fanta_pcdm_tags %}
+
+<div id="leaderboard" class="container">
+    {% for team in leaderboard %}
+        <div class="row">
+            <div class="col s12 m8 offset-m2">
+                <div class="card board-item z-depth-1">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col s1 m1 center-align item-position-number unselectable">
+                                {{ forloop.counter }}
+                            </div>
+                            <div class="col s6 m7">
+                                <div class="item-name">
+                                    <span class="main">{{ team.squadra.nome }}</span>
+                                    <span class="sub">{{ team.squadra.propretario }}</span>
+                                </div>
+                            </div>
+                            <div class="col s5 m4 points">
+                                <span class="new badge unselectable deep-purple lighten-2" data-badge-caption="punti">
+                                    {{ team.totale }}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="card-tabs">
+                        <ul class="tabs tabs-fixed-width">
+                            {% for puntata in team.puntate %}
+                                <li class="tab">
+                                    <a class="{% if forloop.last %}active{% endif %}"
+                                       href="#{{ team.squadra.nome|slugify }}-{{ puntata.numero }}">
+                                        Puntata {{ puntata.numero }}
+                                        {% if puntata.is_finale %}
+                                            (Finale)
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="card-content">
+                        {% for puntata in team.puntate %}
+                            <div id="{{ team.squadra.nome|slugify }}-{{ puntata.numero }}">
+                                <h5>Team</h5>
+                                <ul class="collapsible z-depth-0">
+                                    {% for concorrente in puntata.team_puntata %}
+                                        {% with cpuntata=concorrente.puntate|first substituted=puntata.sostituzioni|substitute_for:concorrente %}
+                                            <li>
+                                                <div class="collapsible-header">
+                                                    {% if concorrente.image_url %}
+                                                        <img class="circle avatar" src="{% static 'fanta_pcdm/images/logo.jpg' %}">
+                                                    {% else %}
+                                                        <i class="circle avatar {{ colors|attr:concorrente.id }} lighten-1 white-text unselectable" data-initials="{{ concorrente.nome|first }}"></i>
+                                                    {% endif %}
+                                                    <span class="name">{{ concorrente.nome }}</span>
+                                                    <span class="badge sostituzione">
+                                                        {% if substituted %}
+                                                            <i class="material-icons subtitution-icon deep-purple-text text-lighten-2 tooltipped unselectable"
+                                                               data-position="right" data-tooltip="Sostituisce {{ substituted.nome }}">swap_horiz</i>
+                                                        {% endif %}
+                                                    </span>
+                                                    <span class="badge status {% if cpuntata.is_sospeso %} new amber accent-1 grey-text text-darken-3{% endif %}" data-badge-caption="">
+                                                        {% if cpuntata.is_sospeso %}
+                                                            SOSPESO
+                                                        {% endif %}
+                                                    </span>
+                                                    <span class="badge unselectable punti" data-badge-caption="punti">{{ concorrente.punteggio }}</span>
+                                                </div>
+                                                {% if cpuntata.bonus_malus %}
+                                                    <div class="collapsible-body bm-list">
+                                                        {% for bm in cpuntata.bonus_malus %}
+                                                            <div class="bm-list-item unselectable">
+                                                                <span class="bm-item-desc" {% if bm.quantita > 1 %}data-qty="{{ bm.quantita }}{% endif %}">{{ bm.descrizione|title }}</span>
+                                                                <span class="bm-item-points {% if bm.is_malus %}is_malus{% endif %}">{{ bm.totale }}</span>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    <div class="collapsible-body bm-list-empty center-align grey-text text-darken-1">
+                                                        <span class="unselectable">Nulla da mostrare qui</span>
+                                                    </div>
+                                                {% endif %}
+                                            </li>
+                                        {% endwith %}
+                                    {% endfor %}
+                                    <li>
+                                        {% with team_bm_total=puntata.team_bm|values_by_attr:'totale'|sum_lst %}
+                                            <div class="collapsible-header"><i class="material-icons">whatshot</i>
+                                                <span class="name">B/M Squadra</span>
+                                                <span class="badge">
+                                                <i class="material-icons tooltipped"
+                                                   data-position="top" data-tooltip="Ulteriori bonus e malus assegnati alla squadra">info</i>
+                                            </span>
+                                                <span class="badge" data-badge-caption=""></span>
+                                                <span class="badge" data-badge-caption="punti">{{ team_bm_total }}</span>
+                                            </div>
+                                            {% if puntata.team_bm %}
+                                                <div class="collapsible-body bm-list">
+                                                    {% for bm in puntata.team_bm %}
+                                                        <div class="bm-list-item unselectable">
+                                                            <span class="bm-item-desc" {% if bm.quantita > 1 %}data-qty="{{ bm.quantita }}{% endif %}">{{ bm.descrizione|title }}</span>
+                                                            <span class="bm-item-points {% if bm.is_malus %}is_malus{% endif %}">{{ bm.totale }}</span>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="collapsible-body bm-list-empty center-align grey-text text-darken-1">
+                                                    <span class="unselectable">Nulla da mostrare qui</span>
+                                                </div>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </li>
+                                </ul>
+                                <h6>Panchina</h6>
+                                <ul class="collection">
+                                    {% for concorrente in puntata.panchina %}
+                                        {% with cpuntata=concorrente.puntate|first has_substitute=puntata.sostituzioni|has_substitute_for:concorrente %}
+                                            <li class="collection-item avatar">
+                                                <div class="content">
+                                                    {% if concorrente.image_url %}
+                                                        <img src="{% static 'fanta_pcdm/images/logo.jpg' %}" alt="" class="avatar circle">
+                                                    {% else %}
+                                                        <i class="circle avatar {{ colors|attr:concorrente.id }} lighten-1 white-text unselectable" data-initials="{{ concorrente.nome|first }}"></i>
+                                                    {% endif %}
+                                                    <span class="title">{{ concorrente.nome }}</span>
+                                                    {% if has_substitute %}
+                                                        {% with substitute=puntata.sostituzioni|substitution_path_for:concorrente|last %}
+                                                            {% if substitute and substitute.id not in puntata.panchina|values_by_attr:"id" and concorrente.id == puntata.sostituzioni|substitute_for:substitute|attr:"id" %}
+                                                                <i class="material-icons subtitution-icon red-text tooltipped unselectable"
+                                                                   data-position="right" data-tooltip="Sostituito da {{ substitute.nome }}">swap_horiz</i>
+                                                            {% endif %}
+                                                        {% endwith %}
+                                                    {% endif %}
+                                                </div>
+                                                {% if cpuntata.is_sospeso %}
+                                                    <span class="badge status new amber accent-1 grey-text text-darken-3" data-badge-caption="">
+                                                        SOSPESO
+                                                    </span>
+                                                {% endif %}
+                                                {% if cpuntata.is_eliminato %}
+                                                    <span class="badge status new red accent-1 grey-text text-darken-3" data-badge-caption="">
+                                                        ELIMINATO
+                                                    </span>
+                                                {% endif %}
+                                                {% if 24 in cpuntata.bonus_malus|values_by_attr:"id" %}
+                                                    <span class="badge status new blue-grey darken-1 white-text" data-badge-caption="">
+                                                        ASSENTE
+                                                    </span>
+                                                {% endif %}
+                                            </li>
+                                        {% endwith %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    M.AutoInit(document.body);
+</script>

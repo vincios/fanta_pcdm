@@ -1,0 +1,121 @@
+/* leaderboard card style */
+#leaderboard {
+  width: 100%;
+  /*counter-reset: css-counter 0; !* initializes counter to 0; use -1 for zero-based numbering *!*/
+}
+
+#leaderboard .board-item .card-title {
+  padding: 18px;
+  font-size: 36px;
+}
+
+/*#leaderboard .board-item .card-title .row {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*}*/
+
+/*#leaderboard .board-item .item-position-number {
+  counter-increment: css-counter 1; !* Increase the counter by 1. *!
+}*/
+
+/*#leaderboard .board-item .item-position-number:before {
+  content: counter(css-counter) " "; !* Apply counter before children's content. *!
+  color: var(--main-color);
+}*/
+
+#leaderboard .board-item .item-position-number {
+  color: var(--main-color);
+}
+
+#leaderboard .board-item .card-title .item-name .sub {
+  font-size: 21px;
+}
+
+#leaderboard .board-item .card-title .points .badge.new {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+#leaderboard .board-item .card-title .points .badge {
+  padding: 8px;
+  line-height: 32px;
+  height: 52px;
+}
+
+#leaderboard .board-item .card-content .collapsible .collapsible-header {
+  align-items: center;
+}
+
+#leaderboard .board-item .card-content .collection .collection-item .content .avatar,
+#leaderboard .board-item .card-content .collapsible .collapsible-header .avatar {
+  display: inline-block;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-right: 1rem;
+  font-style: normal;
+}
+
+#leaderboard .board-item .card-content .collection .collection-item .content .avatar {
+  font-size: 1.5rem;
+  line-height: 33px;
+}
+
+
+#leaderboard .board-item .card-content .collection .collection-item .content .avatar:before,
+#leaderboard .board-item .card-content .collapsible .collapsible-header .avatar:before {
+  content: attr(data-initials);
+}
+#leaderboard .board-item .card-content .collapsible .collapsible-header {
+  font-size: 1.2rem;
+}
+
+#leaderboard .board-item .card-content .collapsible .collapsible-header .name {
+  width: 25%;
+}
+
+#leaderboard .board-item .card-content .collapsible .collapsible-header .punti {
+  min-width: 5rem;
+}
+
+#leaderboard .board-item .card-content .collection .collection-item .content i.subtitution-icon{
+/*#leaderboard .board-item .card-content .collapsible .collapsible-header i.subtitution-icon {*/
+  margin-left: 12px;
+  padding-top: 1px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#leaderboard .board-item .card-content .collapsible .bm-list .bm-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  font-size: 1.1rem;
+  font-weight: 350;
+}
+
+#leaderboard .board-item .card-content .collapsible .bm-list .bm-list-item span[data-qty]:not([data-qty=""]):first-of-type:after {
+  content: " (\00D7" attr(data-qty) ")";
+  font-size: 0.95rem;
+}
+
+#leaderboard .board-item .card-content .collapsible .bm-list .bm-list-item .bm-item-points.is_malus{
+  color: var(--red-color);
+}
+
+#leaderboard .board-item .card-content .collapsible .bm-list .bm-list-item:last-child {
+  padding-bottom: 0;
+}
+
+#leaderboard .board-item .card-content .collection .collection-item {
+  min-height: 32px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+#leaderboard .board-item .card-content .collection .collection-item .content {
+  display: inline-flex;
+  align-items: center;
+}
