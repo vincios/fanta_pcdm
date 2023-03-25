@@ -8,18 +8,34 @@
 
 {% block page_head_title %} Classifica Squadre {% endblock page_head_title %}
 
+{% block nav_buttons %}
+    <li>
+        <a id="reload-btn" class="waves-effect waves-light btn z-depth-0">
+            <span class="hide-on-med-and-down">Ricalcola</span>
+            <span class="countdown hide">(60)</span>
+            <i class="material-icons left hide-on-med-and-down">refresh</i>
+            <i class="material-icons show-on-medium-and-up">refresh</i>
+        </a>
+    </li>
+{% endblock %}
+
 {% block content %}
-    <div hx-get="{% url 'fragment-leaderboard-squadre' %}" hx-trigger="load">
-        <div id="loading-screen" class="htmx-indicator">
-            <div class="center-body">
-                <div class="loader-circle-3"></div>
-                <h5 class="loader-text center-align">Calcolo in corso...</h5>
-            </div>
+    <div id="loading-screen" class="htmx-indicator">
+        <div class="center-body">
+            <div class="loader-circle-3"></div>
+            <img class="loading-gif hide" src="{% static 'fanta_pcdm/images/loading_meme.gif' %}" alt="loading-meme">
+            <h5 class="loader-text center-align">Calcolo in corso...</h5>
         </div>
+    </div>
+
+    <div hx-get="{% url 'fragment-leaderboard-squadre' %}"
+         hx-trigger="load, click from:#reload-btn" hx-vals="js:{renew: event.type==='click'}"
+         hx-indicator="#loading-screen">
     </div>
 {% endblock %}
 
 {% block scripts %}
+    <script src="{% static 'fanta_pcdm_site/js/leaderboard.js' %}"></script>
     <script>
         M.AutoInit(document.body);
     </script>

@@ -8,7 +8,6 @@
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="{% static 'vendor/css/materialize-1.2.2.css' %}"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="{% static 'fanta_pcdm/css/base.css' %}"  media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="{% static 'fanta_pcdm/css/leaderboard.css' %}"  media="screen,projection"/>
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -23,15 +22,30 @@
 <body>
 
 <header>
-    <nav class="top-nav z-depth-1 valign-wrapper">
-        <div class="container">
-            <div class="nav-wrapper">
-                <div class="row">
-                    <div class="col s10 m9 offset-s1 offset-m2">
-                        <h1 id="page-title" class="header unselectable">{% block page_head_title %} Fanta PCDM {% endblock page_head_title %}</h1>
-                    </div>
-                </div>
-            </div>
+    {#    <nav class="top-nav z-depth-1 valign-wrapper">#}
+    {#        <div class="container">#}
+    {#            <div class="nav-wrapper">#}
+    {#                <div class="row">#}
+    {#                    <div class="col s9 m8 offset-s1 offset-m2">#}
+    {#                        <h1 id="page-title" class="header unselectable">{% block page_head_title %} Fanta PCDM {% endblock page_head_title %}</h1>#}
+    {#                    </div>#}
+    {#                <div class="col s1 m1">#}
+    {#                    <a class=" waves-effect btn-flat">#}
+    {#                        Ricarica#}
+    {#                        <i class="material-icons right">send</i>#}
+    {#                    </a>#}
+    {#                </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </nav>#}
+    <nav class="top-nav">
+        <div class="nav-wrapper">
+            <h1 class="brand-logo unselectable">{% block page_head_title %} Fanta PCDM {% endblock page_head_title %}</h1>
+            <ul class="right valign-wrapper">
+                {% block nav_buttons %}
+                {% endblock %}
+            </ul>
         </div>
     </nav>
     <div class="container">

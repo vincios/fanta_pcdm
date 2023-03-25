@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.shortcuts import render
 
-from fanta_pcdm_api.data import get_client, classifica_squadre, classifica_concorrenti
+from fanta_pcdm_api.data import get_client, classifica_squadre, classifica_concorrenti, clear_caches
 from fanta_pcdm_api.data.loaders import get_squadre, get_puntate, get_concorrenti_full
+from fanta_pcdm_api.utils import str2bool
 from fanta_pcdm_site.constants import COLORS_CONCORRENTI
 
 
@@ -21,6 +22,9 @@ def concorrenti_leaderboard(request):
 
 
 def fragment_squadre_leaderboard(request):
+    if str2bool(request.GET.get("renew", "false")):
+        clear_caches()
+
     client = get_client(settings.GOOGLE_APPLICATION_CREDENTIALS_1)
     squadre = get_squadre(client)
     puntate = get_puntate(client)
@@ -31,6 +35,9 @@ def fragment_squadre_leaderboard(request):
 
 
 def fragment_concorrenti_leaderboard(request):
+    if str2bool(request.GET.get("renew", "false")):
+        clear_caches()
+
     client = get_client(settings.GOOGLE_APPLICATION_CREDENTIALS_1)
     concorrenti = get_concorrenti_full(client)
     puntate = get_puntate(client)

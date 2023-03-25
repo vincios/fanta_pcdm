@@ -33,12 +33,24 @@ nav.top-nav {
   background-color: var(--white);
 }
 
+nav.top-nav ul {
+  height: 110px;
+}
+
 nav.top-nav h1.header {
   margin:0;
   padding-top:16px;
   color:var(--main-color);
   font-size: 3em;
   font-weight:300;
+}
+
+nav.top-nav h1.brand-logo {
+  font-size: 3em;
+  font-weight: 300;
+  margin-left: 3em;
+  margin-top: 2rem;
+  color: var(--main-color);
 }
 
 /* Sidenav style */
@@ -143,11 +155,19 @@ footer {
   nav .nav-wrapper {
     text-align:center
   }
+
+  nav.top-nav h1.brand-logo {
+    margin-left: 0;
+  }
 }
 
 @media only screen and (max-width: 601px) {
   a.sidenav-trigger.top-nav {
     left: 0
+  }
+
+  nav.top-nav h1.brand-logo {
+    margin: 6px;
   }
 }
 
@@ -180,12 +200,9 @@ footer {
   ******/
 }
 
-/*body {*/
-/*	background: #202628;*/
-/*}*/
-/*#loading-screen {*/
-/*  display: none;*/
-/*}*/
+#loading-screen {
+  display: none;
+}
 
 #loading-screen.htmx-request {
   display: block;
@@ -203,6 +220,13 @@ footer {
   border-radius: 50%;
   position: relative;
   display: inline-block;
+  cursor: pointer;
+}
+
+#loading-screen .loading-gif {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
 }
 
 #loading-screen .loader-circle-3:after,
