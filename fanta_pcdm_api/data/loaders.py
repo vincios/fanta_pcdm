@@ -1,16 +1,20 @@
 # data loaders
-from functools import lru_cache
+
+from threading import Lock
+from django.conf import settings
 
 import gspread
-from cachetools import cached
-from cachetools.keys import hashkey
 from gspread.utils import numericise_all
+
+import cachetools
+import cachetools.keys
 
 from fanta_pcdm_api.data.gsheet_utils import WorksheetLoader
 from fanta_pcdm_api.models import Concorrente, ConcorrentePuntata, Puntata, BonusMalus, Squadra
 from fanta_pcdm_api.utils import str2bool
 
 SHEET_KEY = "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"
+CACHE_TTL = settings.DATA_CACHE_TTL
 
 # WORKSHEET NAMES
 SHEET_CONCORRENTI = "Concorrenti"
@@ -69,7 +73,7 @@ def _worksheet_loader(client: gspread.Client, worksheet_title: str, table_mode: 
     return wl
 
 
-@cached(cache={}, key=lambda client: hashkey())
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client: cachetools.keys.hashkey(), lock=Lock())
 def get_puntate(client: gspread.Client) -> list[Puntata]:
     wl = _worksheet_loader(client, SHEET_PUNTATE, table_mode=True)
     puntate_records = wl.as_records()
@@ -77,7 +81,7 @@ def get_puntate(client: gspread.Client) -> list[Puntata]:
     return [Puntata.from_sheet(record) for record in puntate_records]
 
 
-@cached(cache={}, key=lambda client, number: hashkey(number))
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client, number: cachetools.keys.hashkey(number), lock=Lock())
 def get_puntata(client: gspread.Client, number: int) -> Puntata:
     puntate = get_puntate(client)
     puntate_filtered = [puntata for puntata in puntate if puntata.numero == number]
@@ -85,7 +89,7 @@ def get_puntata(client: gspread.Client, number: int) -> Puntata:
     return puntate_filtered.pop() if len(puntate_filtered) == 1 else None
 
 
-@cached(cache={}, key=lambda client, concorrente, puntata, wl_concorrente: hashkey(concorrente, puntata))
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client, concorrente, puntata, wl_concorrente: cachetools.keys.hashkey(concorrente, puntata), lock=Lock())
 def get_puntata_concorrente(client: gspread.Client, concorrente: Concorrente, puntata: int | Puntata,
                             wl_concorrente: WorksheetLoader = None) -> ConcorrentePuntata:
     """
@@ -114,7 +118,7 @@ def get_puntata_concorrente(client: gspread.Client, concorrente: Concorrente, pu
     return ConcorrentePuntata(puntata_number, puntata_instance.is_finale, is_eliminato, is_sospeso, bm_list)
 
 
-@cached(cache={}, key=lambda client, concorrente: hashkey(concorrente))
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client, concorrente: cachetools.keys.hashkey(concorrente), lock=Lock())
 def get_puntate_concorrente(client: gspread.Client, concorrente: Concorrente) -> list[ConcorrentePuntata]:
     """
     Load all puntate objects for a given concorrente
@@ -128,7 +132,7 @@ def get_puntate_concorrente(client: gspread.Client, concorrente: Concorrente) ->
     return [get_puntata_concorrente(client, concorrente, puntata, wl_concorrente) for puntata in puntate if puntata.is_trasmessa]
 
 
-@cached(cache={}, key=lambda client: hashkey())
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client: cachetools.keys.hashkey(), lock=Lock())
 def get_concorrenti_without_puntate(client: gspread.Client) -> list[Concorrente]:
     """
     Get list of concorrenti, with concorrente.puntate = None
@@ -140,7 +144,7 @@ def get_concorrenti_without_puntate(client: gspread.Client) -> list[Concorrente]
     return [Concorrente.from_sheet(crecord) for crecord in concorrenti_records]
 
 
-@cached(cache={}, key=lambda client: hashkey())
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client: cachetools.keys.hashkey(), lock=Lock())
 def get_concorrenti_full(client: gspread.Client) -> list[Concorrente]:
     """
     Get list of concorrenti
@@ -155,7 +159,7 @@ def get_concorrenti_full(client: gspread.Client) -> list[Concorrente]:
     return concorrenti
 
 
-@cached(cache={}, key=lambda client, name: hashkey(name))
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client, name: cachetools.keys.hashkey(name), lock=Lock())
 def get_concorrente_full_by_name(client: gspread.Client, name: str) -> Concorrente | None:
     """
     Get a concorrente from its name
@@ -167,8 +171,8 @@ def get_concorrente_full_by_name(client: gspread.Client, name: str) -> Concorren
     return next((c for c in concorrenti if c.nome.strip().lower() == name.strip().lower()), None)
 
 
-@cached(cache={}, key=lambda client: hashkey())
-def get_squadre(client) -> list[Squadra]:
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client: cachetools.keys.hashkey(), lock=Lock())
+def get_squadre(client: gspread.Client) -> list[Squadra]:
     """
     Get list of squadre
     :param client:
@@ -193,11 +197,32 @@ def get_squadre(client) -> list[Squadra]:
     return squadre
 
 
-@cached(cache={}, key=lambda client, name: hashkey(name))
+@cachetools.cached(cache=cachetools.TTLCache(maxsize=640*1024, ttl=CACHE_TTL), key=lambda client, name: cachetools.keys.hashkey(name), lock=Lock())
 def get_squadra_by_name(client: gspread.Client, name: str):
     squadre = get_squadre(client)
 
     return next((s for s in squadre if s.nome.strip().lower() == name.strip().lower()), None)
+
+
+def clear_caches():
+    with get_puntate.cache_lock:
+        get_puntate.cache.clear()
+    with get_puntata.cache_lock:
+        get_puntata.cache.clear()
+    with get_puntata_concorrente.cache_lock:
+        get_puntata_concorrente.cache.clear()
+    with get_puntate_concorrente.cache_lock:
+        get_puntate_concorrente.cache.clear()
+    with get_concorrenti_without_puntate.cache_lock:
+        get_concorrenti_without_puntate.cache.clear()
+    with get_concorrenti_full.cache_lock:
+        get_concorrenti_full.cache.clear()
+    with get_concorrente_full_by_name.cache_lock:
+        get_concorrente_full_by_name.cache.clear()
+    with get_squadre.cache_lock:
+        get_squadre.cache.clear()
+    with get_squadra_by_name.cache_lock:
+        get_squadra_by_name.cache.clear()
 
 
 if __name__ == "__main__":

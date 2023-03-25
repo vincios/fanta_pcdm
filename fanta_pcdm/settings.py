@@ -134,3 +134,6 @@ FANTA_PCDM_SHEET_ID = "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"
 
 if "GOOGLE_APPLICATION_CREDENTIALS_1" in os.environ.keys():
     GOOGLE_APPLICATION_CREDENTIALS_1 = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_1"))
+
+DATA_CACHE_TTL = 60*60*24 if "DATA_CACHE_DURATION" not in os.environ.keys() \
+    else int(os.environ.get("DATA_CACHE_TTL_MINUTES"))*60
