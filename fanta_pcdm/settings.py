@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9tn)&kj5eam=+(&-=zk@3p4(assxus40j%$sc()la-9&ovs=m='
+SECRET_KEY = str(os.environ.get("SECRET_KEY")) if "SECRET_KEY" in os.environ.keys() \
+    else 'django-insecure-9tn)&kj5eam=+(&-=zk@3p4(assxus40j%$sc()la-9&ovs=m='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "192.168.1.223", "pcdm.duckdns.org"]
+ALLOWED_HOSTS = str(str(os.environ.get("ALLOWED_HOSTS"))).split(",") if "ALLOWED_HOSTS" in os.environ.keys() \
+    else ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -130,7 +132,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FANTA_PCDM_SHEET_ID = "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"
+FANTA_PCDM_SHEET_ID = str(os.environ.get("FANTA_PCDM_SHEET_ID")) if "FANTA_PCDM_SHEET_ID" in os.environ.keys() \
+    else "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"
 
 if "GOOGLE_APPLICATION_CREDENTIALS_1" in os.environ.keys():
     GOOGLE_APPLICATION_CREDENTIALS_1 = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_1"))
