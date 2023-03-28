@@ -135,10 +135,13 @@
     margin: 0 6px;
   }
 
-  #leaderboard .board-item .card-content .collapsible .collapsible-header {
+  .collection .collection-item.avatar .title {
     font-size: 1rem;
   }
-
+  
+  #leaderboard .board-item .card-content .collapsible .collapsible-header {
+    font-size: 1.1rem;
+  }
   span.status.badge.new {
     font-size: 0.7rem;
   }
