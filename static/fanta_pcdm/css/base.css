@@ -134,7 +134,6 @@ header,
 main,
 footer {
   padding-left:300px;
-:dp
 }
 
 @media only screen and (min-width: 601px) {
@@ -171,6 +170,11 @@ footer {
   }
 }
 
+@media only screen and (max-width: 401px) {
+  nav.top-nav h1.brand-logo {
+    font-size: 2.5em;
+  }
+}
 
 #main-container {
   width: 100%;
