@@ -21,14 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.environ.get("SECRET_KEY")) if "SECRET_KEY" in os.environ.keys() \
-    else 'django-insecure-9tn)&kj5eam=+(&-=zk@3p4(assxus40j%$sc()la-9&ovs=m='
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-9tn)&kj5eam=+(&-=zk@3p4(assxus40j%$sc()la-9&ovs=m=")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
-ALLOWED_HOSTS = str(str(os.environ.get("ALLOWED_HOSTS"))).split(",") if "ALLOWED_HOSTS" in os.environ.keys() \
-    else ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = str(os.environ.get("WEBSITE_HOSTNAME", "127.0.0.1,localhost")).split(",")
 
 
 # Application definition
@@ -135,11 +133,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FANTA_PCDM_SHEET_ID = str(os.environ.get("FANTA_PCDM_SHEET_ID")) if "FANTA_PCDM_SHEET_ID" in os.environ.keys() \
-    else "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"
+FANTA_PCDM_SHEET_ID = str(os.environ.get("FANTA_PCDM_SHEET_ID", "1wt-PvS1Br0bE79-eQuZyJNa-RUo3SHdyMvzrekJQ7X4"))
 
 if "GOOGLE_APPLICATION_CREDENTIALS_1" in os.environ.keys():
     GOOGLE_APPLICATION_CREDENTIALS_1 = json.loads(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS_1"))
 
-DATA_CACHE_TTL = 60*60*24 if "DATA_CACHE_DURATION" not in os.environ.keys() \
-    else int(os.environ.get("DATA_CACHE_TTL_MINUTES"))*60
+DATA_CACHE_TTL = int(os.environ.get("DATA_CACHE_TTL_MINUTES", 60*24))*60
